@@ -7,11 +7,24 @@ tasks:
     action: core.echo message="Automation started."
     next:
       - when: <% succeeded() %>
-        do: get_approval
+        do: grab_uuid
+
+  grab_uuid:
+    action: core.uuid
+    next:
+      - when: '{{ succeeded() }}'
+        publish:
+          - uuid: <% result().result %>
+        do:
+          - get_approval
+      - when: '{{ failed() }}'
+        do:
+          - finish
 
   get_approval:
     action: core.ask
     input:
+      route: <% ctx().uuid %>
       schema:
         type: object
         properties:
