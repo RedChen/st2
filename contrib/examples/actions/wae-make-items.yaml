@@ -1,0 +1,24 @@
+---
+name: wae-make-items
+description: A wae-make-items
+runner_type: orquesta
+entry_point: workflows/wae-make-items.yaml
+enabled: true
+parameters:
+  _uicToken:
+    type: string
+  _custToken:
+    type: string
+  approvals1:
+    required: true
+    type: array
+  dataList:
+    required: true
+    type: array
+  searchQuiteria:  # 10.1.* => guid
+    required: true
+    type: string
+  description:
+    type: string
+output:
+  

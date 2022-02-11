@@ -1,0 +1,31 @@
+version: 1.0
+
+description: A workflow demonstrating with items and concurrent processing.
+
+input:
+  - uicToken
+  - custToken
+  - approval1
+  - dataList
+
+tasks:
+  task1:
+    with:
+      items: <% ctx(dataList) %>
+    action: core.echo singleItem="<% item() %>"
+      next:
+        - when: <% succeeded() %>
+          publish:
+            route=<% ctx().uuid %>
+            singleItem=<% item() %>
+          do: taskEnd
+
+  taskEnd:
+    join: all
+    action: core.noop
+
+output:
+  - items: <% task(task1).result.items.select($.result.stdout) %>
+  - uicToken
+  - custToken
+  - approval1
